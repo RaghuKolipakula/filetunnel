@@ -6,6 +6,9 @@
   <title>FileTunnel — Direct Peer-to-Peer File Transfer</title>
   <meta name="description" content="FileTunnel is a fast, free, private peer-to-peer file transfer tool. Send unlimited size files directly browser-to-browser with WebRTC and zero cloud storage caps.">
 
+  <!-- Favicon (Browser Tab Icon) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><path d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2' stroke='%2338bdf8' stroke-width='2.5'/><path d='M7 12H17M17 12L13 8M17 12L13 16' stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
   <!-- PeerJS Client Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 
@@ -16,7 +19,6 @@
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 1rem; }
     .card { background: #1e293b; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 520px; text-align: center; margin-top: 2rem; }
-    h1 { margin-top: 0; color: #38bdf8; font-size: 1.8rem; }
     .btn { background: #0284c7; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%; margin-top: 1rem; display: block; text-decoration: none; transition: background 0.2s; }
     .btn:hover { background: #0369a1; }
     .file-label { display: block; padding: 2rem; border: 2px dashed #475569; border-radius: 8px; cursor: pointer; color: #94a3b8; transition: border 0.2s; }
@@ -46,8 +48,16 @@
 
 <!-- MAIN TOOL CARD -->
 <div class="card">
-  <h1>⚡ FileTunnel</h1>
-  <p style="color: #94a3b8; font-size: 0.9rem;">Direct browser-to-browser transfer. No cloud storage limits.</p>
+  <!-- Brand Header with Logo Icon -->
+  <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="2 4" stroke-linecap="round"/>
+      <path d="M7 12H17M17 12L13 8M17 12L13 16" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h1 style="margin: 0; color: #38bdf8; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">FileTunnel</h1>
+  </div>
+  <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0;">Direct browser-to-browser transfer. No cloud storage limits.</p>
 
   <!-- Sender View -->
   <div id="sender-view">
@@ -263,22 +273,16 @@
     const shareInput = document.getElementById("shareUrl");
     const copyBtn = document.querySelector("#share-container .btn");
     
-    // Select text for both desktop and mobile iOS/Android selection
     shareInput.select();
     shareInput.setSelectionRange(0, 99999);
 
-    let copySuccess = false;
-
-    // Method 1: Modern Async Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(shareInput.value).then(() => {
         showCopyFeedback(copyBtn);
       }).catch(() => {
-        // Fallback if permission is denied
         fallbackCopy(shareInput, copyBtn);
       });
     } else {
-      // Method 2: Synchronous execCommand Fallback
       fallbackCopy(shareInput, copyBtn);
     }
   }
@@ -299,11 +303,11 @@
   function showCopyFeedback(btn) {
     const originalText = btn.innerText;
     btn.innerText = "✓ Copied!";
-    btn.style.background = "#16a34a"; // Turn green
+    btn.style.background = "#16a34a";
     
     setTimeout(() => {
       btn.innerText = originalText;
-      btn.style.background = "#0284c7"; // Revert to blue
+      btn.style.background = "#0284c7";
     }, 2000);
   }
 
