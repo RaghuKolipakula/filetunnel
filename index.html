@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FileTunnel — Direct Peer-to-Peer File Transfer</title>
+  <title>FileTunnel — Direct P2P File Transfer</title>
+
   <!-- PeerJS Client Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 
-  <!-- AUTOMATED ADS: Paste your Monetag or Google AdSense script right here -->
+  <!-- GOOGLE ADSENSE MONETIZATION SCRIPT -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5197654798298236" crossorigin="anonymous"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -22,7 +24,7 @@
     .progress-bar-container { background: #0f172a; border-radius: 6px; height: 12px; width: 100%; margin-top: 1rem; overflow: hidden; display: none; }
     .progress-bar { background: #38bdf8; height: 100%; width: 0%; transition: width 0.1s; }
     .status { margin-top: 0.75rem; font-size: 0.85rem; color: #94a3b8; }
-    .ad-zone { margin-top: 1.5rem; padding: 1rem; background: #0f172a; border-radius: 6px; border: 1px dashed #334155; font-size: 0.75rem; color: #64748b; }
+    .ad-zone { margin-top: 1.5rem; min-height: 90px; background: #0f172a; border-radius: 6px; border: 1px dashed #334155; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #64748b; }
   </style>
 </head>
 <body>
@@ -36,7 +38,7 @@
     <label for="fileInput" class="file-label" id="fileLabel">📁 Drop or click to choose file</label>
     <input type="file" id="fileInput">
     <div id="share-container" style="display:none; margin-top: 1rem;">
-      <p style="font-size:0.85rem; color:#94a3b8; margin-bottom: 0.25rem;">Recipient Link:</p>
+      <p style="font-size:0.85rem; color:#94a3b8; margin-bottom: 0.25rem;">Recipient Share Link:</p>
       <input type="text" id="shareUrl" readonly style="width:100%; padding:0.5rem; border-radius:4px; border:1px solid #475569; background:#0f172a; color:#38bdf8; text-align:center;">
       <button class="btn" onclick="copyLink()">Copy Link</button>
     </div>
@@ -53,15 +55,14 @@
   </div>
   <div class="status" id="transferStatus"></div>
 
-  <!-- Ad Zone (Impression Engine) -->
-  <div class="ad-zone">
+  <!-- Auto Ads Placement Area -->
+  <div class="ad-zone" id="adZone">
     <span>SPONSORED</span>
-    <!-- Ad banner target area -->
   </div>
 </div>
 
 <script>
-  const CHUNK_SIZE = 64 * 1024; // 64KB safe chunking
+  const CHUNK_SIZE = 64 * 1024;
   const urlParams = new URLSearchParams(window.location.search);
   const peerIdParam = urlParams.get('peer');
 
@@ -81,7 +82,7 @@
       let receivedBytes = 0;
       let fileChunks = [];
 
-      document.getElementById('receiver-status').innerText = "Connecting P2P pipe...";
+      document.getElementById('receiver-status').innerText = "Establishing secure P2P pipe...";
 
       conn.on('open', () => {
         document.getElementById('receiver-status').innerText = "Connected! Awaiting file stream...";
@@ -162,7 +163,6 @@
         };
 
         reader.onload = (e) => {
-          // Pause reading if WebRTC buffer queue exceeds 8MB
           if (conn.dataChannel && conn.dataChannel.bufferedAmount > 8 * 1024 * 1024) {
             setTimeout(() => {
               conn.send({ type: 'chunk', chunk: e.target.result });
